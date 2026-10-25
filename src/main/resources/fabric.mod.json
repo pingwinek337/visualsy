@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "penguinvisuals",
+	"version": "${version}",
+	"name": "Penguin Visuals",
+	"description": "Pingwinie visuale: menu pod klawiszem 9, zmiana nieba, dzwieki i efekty uderzen, HUD. Wymaga klucza licencyjnego.",
+	"authors": ["Penguin"],
+	"license": "All-Rights-Reserved",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["pl.penguin.visuals.PenguinVisualsClient"]
+	},
+	"mixins": ["penguinvisuals.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
