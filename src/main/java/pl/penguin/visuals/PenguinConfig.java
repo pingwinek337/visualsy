@@ -38,6 +38,20 @@ public class PenguinConfig {
 	public boolean hudFps = true;
 	public boolean hudCoords = false;
 
+	// cel
+	public boolean targetPanel = true;
+	public boolean panelNick = true;
+	public boolean panelSet = true;
+	public boolean panelDurability = true;
+	public float targetRange = 32f;
+
+	// obramowanie
+	public boolean outline = true;
+	public int outlineStyle = 0;
+	public int outlineColor = 0;
+	public float outlineSpeed = 1.0f;
+	public int outlineThickness = 2;
+
 	// motyw
 	public int accentIndex = 0;
 

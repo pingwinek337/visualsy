@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/** Mały HUD w lewym górnym rogu. */
+/** HUD: statystyki w lewym górnym rogu oraz obramowanie i panel gracza, na którego patrzysz. */
 public final class PenguinHud {
 	private PenguinHud() {
 	}
@@ -28,6 +28,11 @@ public final class PenguinHud {
 			return;
 		}
 
+		drawStats(context, mc);
+		TargetHud.render(context, mc, tickCounter);
+	}
+
+	private static void drawStats(DrawContext context, MinecraftClient mc) {
 		PenguinConfig cfg = PenguinConfig.get();
 		List<String> lines = new ArrayList<>();
 		if (cfg.hudFps) {

@@ -8,6 +8,7 @@ import pl.penguin.visuals.LicenseManager;
 import pl.penguin.visuals.PenguinConfig;
 import pl.penguin.visuals.PenguinVisualsClient;
 import pl.penguin.visuals.SkyPreset;
+import pl.penguin.visuals.TargetOutline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
 
 /** Główne menu moda (klawisz 9) z zakładkami. */
 public class PenguinScreen extends Screen {
-	private static final String[] TABS = {"Niebo", "Walka", "HUD", "Motyw", "Licencja"};
+	private static final String[] TABS = {"Niebo", "Walka", "Cel", "Obrys", "HUD", "Motyw", "Licencja"};
 	private static final int PW = 390;
 	private static final int PH = 244;
 	private static final int SIDE = 98;
@@ -98,11 +99,38 @@ public class PenguinScreen extends Screen {
 					() -> cfg.particleIndex = Math.floorMod(cfg.particleIndex - 1, HitEffects.PARTICLE_NAMES.length)));
 			}
 			case 2 -> {
+				add(cx, y, cw, new Toggle("Panel przy graczu", () -> cfg.targetPanel, v -> cfg.targetPanel = v));
+				add(cx, y, cw, new Toggle("Pokaż nick", () -> cfg.panelNick, v -> cfg.panelNick = v));
+				add(cx, y, cw, new Toggle("Pokaż set", () -> cfg.panelSet, v -> cfg.panelSet = v));
+				add(cx, y, cw, new Toggle("Pokaż wytrzymałość", () -> cfg.panelDurability, v -> cfg.panelDurability = v));
+				add(cx, y, cw, new Slider("Zasięg wykrywania", 5, 64, () -> (double) cfg.targetRange,
+					v -> cfg.targetRange = (float) (double) v,
+					v -> Math.round(v) + " m"));
+			}
+			case 3 -> {
+				add(cx, y, cw, new Toggle("Obramowanie", () -> cfg.outline, v -> cfg.outline = v));
+				add(cx, y, cw, new Cycle("Styl",
+					() -> TargetOutline.STYLE_NAMES[Math.floorMod(cfg.outlineStyle, TargetOutline.STYLE_NAMES.length)],
+					() -> cfg.outlineStyle = Math.floorMod(cfg.outlineStyle + 1, TargetOutline.STYLE_NAMES.length),
+					() -> cfg.outlineStyle = Math.floorMod(cfg.outlineStyle - 1, TargetOutline.STYLE_NAMES.length)));
+				add(cx, y, cw, new Cycle("Kolor",
+					() -> TargetOutline.COLOR_NAMES[Math.floorMod(cfg.outlineColor, TargetOutline.COLOR_NAMES.length)],
+					() -> cfg.outlineColor = Math.floorMod(cfg.outlineColor + 1, TargetOutline.COLOR_NAMES.length),
+					() -> cfg.outlineColor = Math.floorMod(cfg.outlineColor - 1, TargetOutline.COLOR_NAMES.length)));
+				add(cx, y, cw, new Slider("Szybkość", 0.2, 3.0, () -> (double) cfg.outlineSpeed,
+					v -> cfg.outlineSpeed = (float) (double) v,
+					v -> String.format(Locale.ROOT, "x%.1f", v)));
+				add(cx, y, cw, new Slider("Grubość", 1, 4, () -> (double) cfg.outlineThickness,
+					v -> cfg.outlineThickness = (int) Math.round(v),
+					v -> String.valueOf(Math.round(v))));
+				add(cx, y, cw, new OutlinePreview());
+			}
+			case 4 -> {
 				add(cx, y, cw, new Toggle("Znak wodny", () -> cfg.hudWatermark, v -> cfg.hudWatermark = v));
 				add(cx, y, cw, new Toggle("Licznik FPS", () -> cfg.hudFps, v -> cfg.hudFps = v));
 				add(cx, y, cw, new Toggle("Współrzędne", () -> cfg.hudCoords, v -> cfg.hudCoords = v));
 			}
-			case 3 -> {
+			case 5 -> {
 				add(cx, y, cw, new Cycle("Kolor motywu",
 					() -> Ui.ACCENT_NAMES[Math.floorMod(cfg.accentIndex, Ui.ACCENTS.length)],
 					() -> cfg.accentIndex = Math.floorMod(cfg.accentIndex + 1, Ui.ACCENTS.length),
@@ -441,6 +469,19 @@ public class PenguinScreen extends Screen {
 			int g = (int) (((rgb >> 8) & 0xFF) * 0.55);
 			int b = (int) ((rgb & 0xFF) * 0.55);
 			return (r << 16) | (g << 8) | b;
+		}
+	}
+
+	private class OutlinePreview extends Control {
+		OutlinePreview() {
+			this.h = 50;
+		}
+
+		@Override
+		void render(DrawContext c, int mx, int my) {
+			int cx = x + w / 2;
+			Ui.drawPenguin(c, cx - 10, y + h / 2 - 11, 2);
+			TargetOutline.draw(c, cx - 26, y + 3, cx + 26, y + h - 3, PenguinConfig.get());
 		}
 	}
 }
