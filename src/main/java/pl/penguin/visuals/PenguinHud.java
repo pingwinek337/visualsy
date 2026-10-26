@@ -24,7 +24,7 @@ public final class PenguinHud {
 			return;
 		}
 		MinecraftClient mc = MinecraftClient.getInstance();
-		if (mc.player == null || mc.options.hudHidden || mc.options.debugEnabled) {
+		if (mc.player == null || mc.options.hudHidden || mc.getDebugHud().shouldShowDebugHud()) {
 			return;
 		}
 
