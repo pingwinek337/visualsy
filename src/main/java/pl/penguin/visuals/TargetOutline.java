@@ -108,6 +108,18 @@ public final class TargetOutline {
 		Ui.rect(c, x1 - t, y1 - len, t, len, color);
 	}
 
+	/** Kolor próbki dla danego indeksu koloru obrysu (RGB, bez alfa) - do menu. */
+	public static int swatch(int index) {
+		int i = Math.floorMod(index, COLOR_NAMES.length);
+		if (i == 0) {
+			return Ui.accent() & 0xFFFFFF;
+		}
+		if (i == COLOR_NAMES.length - 1) {
+			return Color.HSBtoRGB((float) ((System.currentTimeMillis() % 4000L) / 4000.0), 0.75f, 1f) & 0xFFFFFF;
+		}
+		return SOLID[i];
+	}
+
 	// ------------------------------------------------------------------ pomocnicze
 
 	private static int rgb(PenguinConfig cfg, double phase) {

@@ -10,6 +10,7 @@ Klientowy mod z pingwinim motywem. Menu otwierasz klawiszem **9** (zmienisz w St
 - **Obrys** - animowane obramowanie wokół gracza: 5 stylów (kometa, płynąca, przerywana, kropki, narożniki), kolory z tęczą, szybkość i grubość, z podglądem w menu
 - **HUD** - znak wodny, FPS, współrzędne
 - **Motyw** - 5 kolorów interfejsu
+- **GUI** - animowane otwieranie, zaokrąglone rogi i cienie, śnieg w tle, ikony zakładek z płynnym wskaźnikiem, animowane przełączniki i suwaki, kafelki kolorów motywu, przewijanie kółkiem myszy
 - Ustawienia zapisują się w `config/penguinvisuals.json`
 
 ## Budowanie
