@@ -41,8 +41,11 @@ public class PenguinConfig {
 	// cel
 	public boolean targetPanel = true;
 	public boolean panelNick = true;
-	public boolean panelSet = true;
-	public boolean panelDurability = true;
+	public int panelAnchor = 0;
+	public int panelOffsetX = 6;
+	public int panelOffsetY = 52;
+	public boolean targetHearts = true;
+	public int heartScale = 1;
 	public float targetRange = 32f;
 
 	// obramowanie
@@ -54,6 +57,8 @@ public class PenguinConfig {
 
 	// motyw
 	public int accentIndex = 0;
+	public int bgEffect = 0;
+	public boolean bgInGame = false;
 
 	public static PenguinConfig get() {
 		return instance;

@@ -1,0 +1,62 @@
+{
+	"hit_hitmarker": {
+		"sounds": [
+			"penguinvisuals:hit_hitmarker"
+		]
+	},
+	"hit_coin": {
+		"sounds": [
+			"penguinvisuals:hit_coin"
+		]
+	},
+	"hit_laser": {
+		"sounds": [
+			"penguinvisuals:hit_laser"
+		]
+	},
+	"hit_katana": {
+		"sounds": [
+			"penguinvisuals:hit_katana"
+		]
+	},
+	"hit_bonk": {
+		"sounds": [
+			"penguinvisuals:hit_bonk"
+		]
+	},
+	"hit_glass": {
+		"sounds": [
+			"penguinvisuals:hit_glass"
+		]
+	},
+	"hit_zap": {
+		"sounds": [
+			"penguinvisuals:hit_zap"
+		]
+	},
+	"hit_headshot": {
+		"sounds": [
+			"penguinvisuals:hit_headshot"
+		]
+	},
+	"hit_retro": {
+		"sounds": [
+			"penguinvisuals:hit_retro"
+		]
+	},
+	"hit_bass": {
+		"sounds": [
+			"penguinvisuals:hit_bass"
+		]
+	},
+	"hit_bubble": {
+		"sounds": [
+			"penguinvisuals:hit_bubble"
+		]
+	},
+	"hit_magic": {
+		"sounds": [
+			"penguinvisuals:hit_magic"
+		]
+	}
+}

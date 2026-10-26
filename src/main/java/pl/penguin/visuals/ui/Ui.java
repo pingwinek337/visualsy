@@ -10,8 +10,13 @@ import pl.penguin.visuals.PenguinConfig;
  * przezroczystość (używaną do animacji pojawiania się menu).
  */
 public final class Ui {
-	public static final int[] ACCENTS = {0x4FC3F7, 0xFF5722, 0xB388FF, 0x4DD0A1, 0xFF6FA8};
-	public static final String[] ACCENT_NAMES = {"Lód", "Lawa", "Neon", "Mięta", "Róż"};
+	public static final int[] ACCENTS = {
+		0x4FC3F7, 0xFF5722, 0xB388FF, 0x4DD0A1, 0xFF6FA8,
+		0xFFC83B, 0xE53935, 0x2979FF, 0xFF8A3D, 0xFFB7D5, 0xB6FF3B
+	};
+	public static final String[] ACCENT_NAMES = {
+		"Lód", "Lawa", "Neon", "Mięta", "Róż", "Złoto", "Krew", "Ocean", "Zachód", "Sakura", "Toksyk"
+	};
 
 	private static final String[] PENGUIN = {
 		"...KKKK...",

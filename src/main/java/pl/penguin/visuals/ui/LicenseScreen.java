@@ -13,7 +13,7 @@ public class LicenseScreen extends Screen {
 	private static final int MAX_RAW = 20;
 
 	private final StringBuilder raw = new StringBuilder();
-	private final Fx.Snow snow = new Fx.Snow(70);
+	private final Fx.Background snow = new Fx.Background(90);
 
 	private String message = "";
 	private int messageColor = 0xFFFF6B6B;

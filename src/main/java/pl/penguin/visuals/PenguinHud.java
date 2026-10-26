@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import pl.penguin.visuals.ui.Fx;
 import pl.penguin.visuals.ui.Ui;
 
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.Locale;
 
 /** HUD: statystyki w lewym górnym rogu oraz obramowanie i panel gracza, na którego patrzysz. */
 public final class PenguinHud {
+	private static final Fx.Background GAME_EFFECT = new Fx.Background(60);
+
 	private PenguinHud() {
 	}
 
@@ -28,6 +31,9 @@ public final class PenguinHud {
 			return;
 		}
 
+		if (PenguinConfig.get().bgInGame && mc.currentScreen == null) {
+			GAME_EFFECT.render(context, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
+		}
 		drawStats(context, mc);
 		TargetHud.render(context, mc, tickCounter);
 	}

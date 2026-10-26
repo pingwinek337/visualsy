@@ -14,18 +14,29 @@ import net.minecraft.world.World;
 
 /** Dźwięk i cząsteczki po uderzeniu kogoś. */
 public final class HitEffects {
+	/** Pierwsze 12 to własne dźwięki moda (assets/penguinvisuals/sounds), reszta z gry. */
 	public static final String[] SOUND_NAMES = {
-		"Pling", "Orb XP", "Krytyk", "Strzała", "Level up", "Dzwon", "Kurczak", "Kot"
+		"Hitmarker", "Moneta", "Laser", "Katana", "Bonk", "Szkło", "Zap", "Headshot",
+		"Retro 8-bit", "Bas 808", "Bąbel", "Magia",
+		"Krytyk", "Level up", "Orb XP", "Dzwon"
 	};
 	private static final String[] SOUND_IDS = {
-		"block.note_block.pling",
-		"entity.experience_orb.pickup",
-		"entity.player.attack.crit",
-		"entity.arrow.hit_player",
-		"entity.player.levelup",
-		"block.bell.use",
-		"entity.chicken.ambient",
-		"entity.cat.ambient"
+		"penguinvisuals:hit_hitmarker",
+		"penguinvisuals:hit_coin",
+		"penguinvisuals:hit_laser",
+		"penguinvisuals:hit_katana",
+		"penguinvisuals:hit_bonk",
+		"penguinvisuals:hit_glass",
+		"penguinvisuals:hit_zap",
+		"penguinvisuals:hit_headshot",
+		"penguinvisuals:hit_retro",
+		"penguinvisuals:hit_bass",
+		"penguinvisuals:hit_bubble",
+		"penguinvisuals:hit_magic",
+		"minecraft:entity.player.attack.crit",
+		"minecraft:entity.player.levelup",
+		"minecraft:entity.experience_orb.pickup",
+		"minecraft:block.bell.use"
 	};
 
 	public static final String[] PARTICLE_NAMES = {
@@ -82,7 +93,9 @@ public final class HitEffects {
 	public static void playSound() {
 		PenguinConfig cfg = PenguinConfig.get();
 		String id = SOUND_IDS[Math.floorMod(cfg.hitSoundIndex, SOUND_IDS.length)];
-		SoundEvent event = SoundEvent.of(Identifier.ofVanilla(id));
+		int colon = id.indexOf(':');
+		Identifier identifier = Identifier.of(id.substring(0, colon), id.substring(colon + 1));
+		SoundEvent event = SoundEvent.of(identifier);
 		MinecraftClient.getInstance().getSoundManager()
 			.play(PositionedSoundInstance.master(event, cfg.hitPitch, cfg.hitVolume));
 	}

@@ -8,6 +8,7 @@ import pl.penguin.visuals.LicenseManager;
 import pl.penguin.visuals.PenguinConfig;
 import pl.penguin.visuals.PenguinVisualsClient;
 import pl.penguin.visuals.SkyPreset;
+import pl.penguin.visuals.TargetHud;
 import pl.penguin.visuals.TargetOutline;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class PenguinScreen extends Screen {
 
 	private final List<Control> controls = new ArrayList<>();
 	private final float[] tabHover = new float[TABS.length];
-	private final Fx.Snow snow = new Fx.Snow(70);
+	private final Fx.Background snow = new Fx.Background(90);
 
 	private Control dragging;
 	private int px;
@@ -187,11 +188,24 @@ public class PenguinScreen extends Screen {
 					() -> cfg.particleIndex = Math.floorMod(cfg.particleIndex - 1, HitEffects.PARTICLE_NAMES.length)));
 			}
 			case 2 -> {
-				section("Panel przy graczu");
+				section("Panel gracza (HP)");
 				add(new Toggle("Panel włączony", () -> cfg.targetPanel, v -> cfg.targetPanel = v));
 				add(new Toggle("Pokaż nick", () -> cfg.panelNick, v -> cfg.panelNick = v));
-				add(new Toggle("Pokaż set", () -> cfg.panelSet, v -> cfg.panelSet = v));
-				add(new Toggle("Pokaż wytrzymałość", () -> cfg.panelDurability, v -> cfg.panelDurability = v));
+				add(new Toggle("Serduszka nad głową", () -> cfg.targetHearts, v -> cfg.targetHearts = v));
+				add(new Slider("Rozmiar serduszek", 1, 3, () -> (double) cfg.heartScale,
+					v -> cfg.heartScale = (int) Math.round(v),
+					v -> String.valueOf(Math.round(v))));
+				section("Pozycja panelu");
+				add(new Cycle("Miejsce",
+					() -> TargetHud.ANCHOR_NAMES[Math.floorMod(cfg.panelAnchor, TargetHud.ANCHOR_NAMES.length)],
+					() -> cfg.panelAnchor = Math.floorMod(cfg.panelAnchor + 1, TargetHud.ANCHOR_NAMES.length),
+					() -> cfg.panelAnchor = Math.floorMod(cfg.panelAnchor - 1, TargetHud.ANCHOR_NAMES.length)));
+				add(new Slider("Przesunięcie X", 0, 400, () -> (double) cfg.panelOffsetX,
+					v -> cfg.panelOffsetX = (int) Math.round(v),
+					v -> Math.round(v) + " px"));
+				add(new Slider("Przesunięcie Y", 0, 300, () -> (double) cfg.panelOffsetY,
+					v -> cfg.panelOffsetY = (int) Math.round(v),
+					v -> Math.round(v) + " px"));
 				section("Wykrywanie");
 				add(new Slider("Zasięg", 5, 64, () -> (double) cfg.targetRange,
 					v -> cfg.targetRange = (float) (double) v,
@@ -228,6 +242,12 @@ public class PenguinScreen extends Screen {
 				section("Kolor motywu");
 				add(new Swatches());
 				add(new Label("Zmienia kolor menu, HUD-u i obramowania.", 0xFF8B95A7));
+				section("Efekt tła");
+				add(new Cycle("Efekt",
+					() -> Fx.EFFECT_NAMES[Math.floorMod(cfg.bgEffect, Fx.EFFECT_NAMES.length)],
+					() -> cfg.bgEffect = Math.floorMod(cfg.bgEffect + 1, Fx.EFFECT_NAMES.length),
+					() -> cfg.bgEffect = Math.floorMod(cfg.bgEffect - 1, Fx.EFFECT_NAMES.length)));
+				add(new Toggle("Pokaż też w grze", () -> cfg.bgInGame, v -> cfg.bgInGame = v));
 			}
 			default -> {
 				section("Twoja licencja");
@@ -762,10 +782,13 @@ public class PenguinScreen extends Screen {
 
 	/** Wybór koloru motywu jako kolorowe kafelki. */
 	private class Swatches extends Control {
-		private static final int SIZE = 34;
+		private static final int SIZE = 30;
+		private static final int PER_ROW = 6;
+		private static final int ROW_H = SIZE + 16;
 
 		Swatches() {
-			this.h = 52;
+			int rows = (Ui.ACCENTS.length + PER_ROW - 1) / PER_ROW;
+			this.h = rows * ROW_H - 4;
 		}
 
 		@Override
@@ -774,27 +797,34 @@ public class PenguinScreen extends Screen {
 		}
 
 		private int gap() {
-			int n = Ui.ACCENTS.length;
-			return (w - n * SIZE) / (n - 1);
+			return Math.max(4, (w - PER_ROW * SIZE) / (PER_ROW - 1));
+		}
+
+		private int cellX(int i) {
+			return x + (i % PER_ROW) * (SIZE + gap());
+		}
+
+		private int cellY(int i) {
+			return y + (i / PER_ROW) * ROW_H;
 		}
 
 		@Override
 		void render(DrawContext c, int mx, int my) {
 			PenguinConfig cfg = PenguinConfig.get();
 			int selected = Math.floorMod(cfg.accentIndex, Ui.ACCENTS.length);
-			int gap = gap();
 			for (int i = 0; i < Ui.ACCENTS.length; i++) {
-				int sx = x + i * (SIZE + gap);
+				int sx = cellX(i);
+				int sy = cellY(i);
 				int color = 0xFF000000 | Ui.ACCENTS[i];
-				boolean hov = Ui.inside(mx, my, sx, y, SIZE, SIZE);
+				boolean hov = Ui.inside(mx, my, sx, sy, SIZE, SIZE);
 				if (i == selected) {
-					Ui.glow(c, sx + SIZE / 2, y + SIZE / 2, SIZE / 2 - 2, color, 0x16);
-					Ui.round(c, sx - 2, y - 2, SIZE + 4, SIZE + 4, 9, 0xFFFFFFFF);
-					Ui.round(c, sx - 1, y - 1, SIZE + 2, SIZE + 2, 8, 0xFF101722);
+					Ui.glow(c, sx + SIZE / 2, sy + SIZE / 2, SIZE / 2 - 2, color, 0x16);
+					Ui.round(c, sx - 2, sy - 2, SIZE + 4, SIZE + 4, 9, 0xFFFFFFFF);
+					Ui.round(c, sx - 1, sy - 1, SIZE + 2, SIZE + 2, 8, 0xFF101722);
 				}
-				Ui.round(c, sx, y, SIZE, SIZE, 7, hov ? Ui.shade(color, 1.15f) : color);
-				Ui.gradient(c, sx + 2, y + 1, SIZE - 4, SIZE / 2 - 2, 0x30FFFFFF, 0x00FFFFFF);
-				Ui.textCentered(c, textRenderer, Ui.ACCENT_NAMES[i], sx + SIZE / 2, y + SIZE + 6,
+				Ui.round(c, sx, sy, SIZE, SIZE, 7, hov ? Ui.shade(color, 1.15f) : color);
+				Ui.gradient(c, sx + 2, sy + 1, SIZE - 4, SIZE / 2 - 2, 0x30FFFFFF, 0x00FFFFFF);
+				Ui.textCentered(c, textRenderer, Ui.ACCENT_NAMES[i], sx + SIZE / 2, sy + SIZE + 5,
 					i == selected ? 0xFFFFFFFF : 0xFF8B95A7, false);
 			}
 		}
@@ -804,9 +834,8 @@ public class PenguinScreen extends Screen {
 			if (button != 0) {
 				return false;
 			}
-			int gap = gap();
 			for (int i = 0; i < Ui.ACCENTS.length; i++) {
-				if (Ui.inside(mx, my, x + i * (SIZE + gap), y, SIZE, SIZE)) {
+				if (Ui.inside(mx, my, cellX(i), cellY(i), SIZE, SIZE)) {
 					PenguinConfig.get().accentIndex = i;
 					return true;
 				}
