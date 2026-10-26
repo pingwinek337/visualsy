@@ -24,7 +24,14 @@ jobs:
           gradle-version: "8.12"
 
       - name: Build
-        run: gradle build --no-daemon
+        run: |
+          set +e
+          gradle build --no-daemon --console=plain > build.log 2>&1
+          code=$?
+          grep -E "error:" build.log | sort -u | head -8 | while IFS= read -r l; do echo "::error::${l//%/%25}"; done
+          sed -n '/What went wrong/,/Try:/p' build.log | head -14 | tr '\n' '|' | sed 's/%/%25/g; s/^/::error::/'
+          echo
+          exit $code
 
       - name: Upload jar
         uses: actions/upload-artifact@v4
